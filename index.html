@@ -1,19 +1,379 @@
-<html><head><meta charset=utf-8><title>JsAssist Open Dccon</title><style>html, body {
-      margin: 0;
-      padding: 0;
-      min-height: 100%;
-    }</style><link href=/jsassist-open-dccon/static/css/app.a705d3b05062a82b093020958c49a76d.css rel=stylesheet></head><body><div id=app></div><script>/* eslint-disable */
-  (function (i, s, o, g, r, a, m) {
-    i['GoogleAnalyticsObject'] = r;
-    i[r] = i[r] || function () {
-      (i[r].q = i[r].q || []).push(arguments)
-    }, i[r].l = 1 * new Date();
-    a = s.createElement(o),
-      m = s.getElementsByTagName(o)[0];
-    a.async = 1;
-    a.src = g;
-    m.parentNode.insertBefore(a, m)
-  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+<!DOCTYPE html>
+<html lang="ko">
 
-  ga('create', 'UA-39395407-5', 'auto');
-  ga('send', 'pageview');</script><script type=text/javascript src=/jsassist-open-dccon/static/js/manifest.39214946afe515c64f6c.js></script><script type=text/javascript src=/jsassist-open-dccon/static/js/vendor.8d7adcfe5d0ad0a2b850.js></script><script type=text/javascript src=/jsassist-open-dccon/static/js/app.4210ddab2ddda1966d88.js></script></body></html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>이모티콘 목록</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/spectre.css/0.2.14/spectre-exp.min.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/spectre.css/0.2.14/spectre-icons.min.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/spectre.css/0.2.14/spectre.min.css" />
+	<style>
+	<!--
+	.width100 { width: 100%; }
+	#search:focus { z-index: auto; }
+
+	@media only screen and (min-width: 1280px) {
+		.container { max-width: 1280px; }
+	}
+
+	body {
+		padding-top: 32px;
+		padding-bottom: 32px;
+		background: #454d5d;
+	}
+
+	.card { border-width: 0px; }
+
+	.chip {
+		margin-right: 8px;
+		margin-bottom: 8px;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-khtml-user-select: none;
+		-ms-user-select: none;
+	}
+
+	.tag-selected {
+		color: #fff;
+		background: #5764c6;
+	}
+
+	.dccon {
+		cursor: pointer;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-khtml-user-select: none;
+		-ms-user-select: none;
+	}
+
+	.dccon>.card>.card-body {
+		height: 70px;
+	}
+
+	#search_clear {
+		cursor: pointer;
+	}
+
+	.toast-container {
+		position: fixed;
+		bottom: 0px;
+		right: 0px;
+		padding: 16px;
+		z-index: 400;
+	}
+
+	.toast {
+		margin-top: 8px;
+	}
+
+	.menu {
+		max-height: 360px;
+		overflow-y: scroll;
+		overflow-x: hidden;
+	}
+
+	.dccon.tooltip::after {
+		width: 100%;
+		margin-left: 9px;
+		margin-right: 9px;
+		height: 72px;
+		padding: 12px;
+		padding-right: 28px;
+		white-space: pre-line;
+		border-top-left-radius: 0px;
+		border-top-right-radius: 0px;
+	}
+
+	.dccon.tooltip.tooltip-bottom:focus::after,
+		.tooltip.tooltip-bottom:hover::after {
+		opacity: 1;
+		-webkit-transform: translate(-50%, -81px);
+		-ms-transform: translate(-50%, -81px);
+		transform: translate(-50%, -81px);
+	}
+	-->
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<div class="columns">
+			<div class="column hide-xs show col-md-1 col-2"></div>
+			<div class="column col-xs-12 col-md-10 col-8">
+				<div class="input-group input-inline width100">
+					<div class="form-autocomplete width100">
+						<div class="form-autocomplete-input form-input has-icon-right">
+							<input class="form-input" id="search" type="text" placeholder="이모티콘 검색" />
+							<i class="form-icon icon icon-cross" id="search_clear"></i>
+						</div>
+						<ul class="menu hide" id="autocomplete"></ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="columns">
+			<div class="column hide-xs show col-md-1 col-2"></div>
+			<div class="column col-xs-12 col-md-10 col-8">
+				<div class="tags"></div>
+			</div>
+		</div>
+		<div class="columns">
+			<div class="column hide-xs show col-lg-1 col-1"></div>
+			<div class="column col-xs-12 col-lg-10 col-10 columns dccon-list"></div>
+		</div>
+		<div class="toast-container"></div>
+
+	</div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.5/jquery.lazy.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.5/jquery.lazy.plugins.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+	<script src="https://cdn.rawgit.com/teampopong/hangul-jamo-js/eaca39e7/hangul-jamo.js"></script>
+	<script type="text/javascript">
+		let dcconList = [];
+		function getUrlParameter(sParam) {
+			let sPageURL = decodeURIComponent(window.location.search.substring(1)),
+				sURLVariables = sPageURL.split('&'),
+				sParameterName;
+
+			for(let i=0; i<sURLVariables.length; i++) {
+				sParameterName = sURLVariables[i].split('=');
+
+				if(sParameterName[0] === sParam) {
+					return (sParameterName[1] === undefined) ? true : sParameterName[1];
+				}
+			}
+		};
+
+		function init() {
+			let seletedTags = [];
+			let currentSearchText = "";
+			let dcconSearchMap = {}; // keyword로 dccon을 찾을 수 있도록 하는 맵
+			let dcconKeywordList = []; // 전체 keyword 리스트
+			let visibleDccon = {};
+			let autocompleteData = {};
+			let tags = [];
+			
+			// dcconSearchMap, dcconKeywordList 초기화
+			for(let i=0; i<dcconList.length; i++) {
+				let dccon = dcconList[i];
+				for(let j=0; j<dccon.tags.length; j++) {
+					let tag = dccon.tags[j];
+					if(tags.indexOf(tag) == -1) {
+						tags.push(tag);
+					}
+				}
+				for(let j = 0; j<dccon.keywords.length; j++) {
+					let keyword = dccon.keywords[j];
+					dcconSearchMap[keyword] = dccon;
+					dcconKeywordList.push(keyword);
+					autocompleteData[keyword] = dccon.path;
+					$('div.dccon-list').append(
+						'<div class="dccon column col-xs-6 col-md-4 col-lg-3 col-xl-2 col-2 tooltip tooltip-bottom" data-keyword="' + keyword + '" data-tags="' + dccon.tags.join(',') + '" data-clipboard-text="~' + keyword + '" data-tooltip="' + dccon.keywords
+						.join(', ') + '">' +
+						'	<div class="card">' +
+						'		<div class="card-image">' +
+						'			<img class="img-responsive width100 lazy" data-src="/images/' + dccon.path + '">' +
+						'		</div>' +
+						'		<div class="card-body">' +
+						keyword +
+						'		</div>' +
+						'	</div>' +
+						'</div>');
+					$('#autocomplete').append(
+						'<li class="menu-item">' +
+						'	<a href="#" class="autocomplete-item" data-keyword="' + keyword + '" data-clipboard-text="~' + keyword + '">' +
+						'		<div class="tile tile-centered">' +
+						'			<div class="tile-icon">' +
+						'				<img data-src="/images/' + dccon.path + '" class="avatar avatar-sm lazy"/>' +
+						'			</div>' +
+						'			<div class="tile-content">' + keyword +
+						'			</div>' +
+						'		</div>' +
+						'	</a>' +
+						'</li>'
+					);
+				}
+			}
+
+			let lazyDccon = $(".dccon > .card > .card-image > img.lazy").Lazy({
+				chainable: false,
+				visibleOnly: true
+			});
+			let lazyAutocompletedIcon = $(".autocomplete-item > .tile > .tile-icon > img.lazy").Lazy({
+				chainable: false,
+				visibleOnly: true,
+				appendScroll: $('#autocomplete')
+			});
+
+			$('.autocomplete-item').click(function() {
+				currentSearchText = $(this).data('keyword');
+				$('input#search').val(currentSearchText);
+				updateList();
+				$('#autocomplete').addClass('hide');
+			});
+
+			tags.sort();
+			new Clipboard('.dccon, .autocomplete-item').on('success', function(e) {
+				// 종성 여부 확인
+				let ccode = e.text.charCodeAt(e.text.length-1) - 44032;
+				let cho=19, jung=21, jong=28;
+				let josa = '을(를)';
+				if(ccode >= 0 && ccode <= 11171) {
+					if(ccode % 28 === 0) josa = '를';
+					else josa = '을';
+				}
+				
+				let $toast = $('<div class="toast toast-primary">' +
+					'이모티콘 "' + e.text + '"' + josa + ' 복사했습니다. 이제 채팅창에 입력하세요!' +
+					'</div>');
+				$toast.delay(3000).fadeOut('slow', function() {
+					$toast.remove();
+				});
+				$('.toast-container').append($toast);
+			});
+
+			for(let i=0; i<tags.length; i++) {
+				let tag = tags[i];
+				$('div.tags').append('<label class="chip" id="tag-' + i + '" data-tag="' + tag + '">' +
+					tag +
+					'</label>');
+			}
+
+			$('div.tags>.chip').click(function(e) {
+				let $this = $(this);
+				let tag = $this.data('tag');
+				if($this.hasClass('tag-selected')) {
+					$this.removeClass('tag-selected');
+					let index = seletedTags.indexOf(tag);
+					if(index >= 0) {
+						seletedTags.splice(index, 1);
+					}
+				} else {
+					$this.addClass('tag-selected');
+					seletedTags.push(tag);
+				}
+				updateList();
+			});
+
+			$('input#search').on("focusin", function(e) {
+				$('#autocomplete').removeClass('hide').scrollTop(0);
+				lazyAutocompletedIcon.update();
+			});
+
+			$('input#search').on("focusout", function(e) {
+				if(!$(e.relatedTarget).hasClass('autocomplete-item')) {
+					$('#autocomplete').addClass('hide');
+				}
+			});
+			$(document).keydown(
+				function(e) {
+					if(!$('#autocomplete').hasClass('hide')) {
+						let $focusedAutocompleteItem = $('.menu-item:not(".hide")>.autocomplete-item:focus');
+						if(e.keyCode == 40) { // down
+							e.preventDefault();
+							if($focusedAutocompleteItem.length > 0) {
+								$focusedAutocompleteItem.parent().nextAll('.menu-item:not(".hide")').first().children().focus();
+							} else {
+								$('.menu-item:not(".hide")>.autocomplete-item').first().focus();
+							}
+						} else if(e.keyCode == 38) { // up
+							e.preventDefault();
+							if($focusedAutocompleteItem.length > 0) {
+								$focusedAutocompleteItem.parent().prevAll('.menu-item:not(".hide")').first().children().focus();
+							}
+						} else if(e.keyCode == 27) { // esc
+							e.preventDefault();
+							$('#autocomplete').addClass('hide');
+						}
+					}
+				});
+
+			function updateList() {
+				visibleDccon = {};
+				$('.dccon').each(function() {
+					let $this = $(this);
+					let keyword = $this.data('keyword');
+					let tags = $this.data('tags').split(',');
+					let dccon = dcconSearchMap[keyword];
+					let searchResult = (function() {
+						if(seletedTags.length > 0) {
+							let hasTag = false;
+							for(let i=0; i<tags.length; i++) {
+								if(seletedTags.indexOf(tags[i]) != -1) {
+									hasTag = true;
+									break;
+								}
+							}
+							if(!hasTag) {
+								return false;
+							}
+						}
+						if(currentSearchText.length > 0 && keyword.indexOf(currentSearchText) == -1) {
+							return false;
+						}
+						return true;
+					})();
+					if(searchResult && visibleDccon[dccon.keywords.join(",")] == undefined) {
+						visibleDccon[dccon.keywords.join(",")] = dccon;
+						$this.removeClass('hide');
+					} else {
+						$this.addClass('hide');
+					}
+				});
+
+				$('.autocomplete-item').each(function() {
+					let $this = $(this);
+					let keyword = $this.data('keyword');
+					if(HANGUL.indexOf(keyword, currentSearchText) != -1) {
+						$this.parent().removeClass('hide');
+					} else {
+						$this.parent().addClass('hide');
+					}
+				});
+				if($('.menu-item:not(".hide")').length == 0) {
+					$('#autocomplete').addClass('hide');
+				} else if($('input#search').is(":focus")) {
+					$('#autocomplete').removeClass('hide').scrollTop(0);;
+					lazyAutocompletedIcon.update();
+				}
+
+				lazyDccon.update();
+				lazyAutocompletedIcon.update();
+			}
+
+			$('input#search').on('input', function(e) {
+				currentSearchText = $('input#search').val();
+				updateList();
+			});
+			$('#search_clear').click(function() {
+				$('input#search').val('');
+				currentSearchText = '';
+				updateList();
+			});
+			updateList();
+		}
+		$(document).ready(function() {
+			let dcconListUrl = getUrlParameter('dccon_list');
+			if(dcconListUrl == undefined) {
+				dcconListUrl = 'https://raw.githubusercontent.com/Sharnika2019/Sharnika2019.github.io/main/static/dccon_list.json'
+			}
+
+
+			$.getJSON(dcconListUrl).done(function(data) {
+					dcconList = data.dccons;
+					init();
+				})
+				.fail(function(jqxhr, textStatus, error) {
+					let err = textStatus + ", " + error;
+					console.log("Request Failed: " + err);
+					init();
+				});
+		});
+	</script>
+</body>
+
+</html>
