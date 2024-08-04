@@ -1,6 +1,10 @@
 {
   "dccons": [
+    {"keywords" : ["마치"], "tags": [""], "path": "https://i.postimg.cc/Qt5yXY8j/image.png"},
+    {"keywords" : ["의도"], "tags": [""], "path": "https://i.postimg.cc/43j0RRT8/image.gif"},
+    {"keywords" : ["버그"], "tags": [""], "path": "https://i.postimg.cc/d0hfftgk/image.gif"},
     {"keywords" : ["한눈"], "tags": [""], "path": "https://i.postimg.cc/zBTzYZdq/image.jpg"},
+    {"keywords" : ["파킨"], "tags": [""], "path": "https://i.postimg.cc/BnQkxCgC/image.gif"},
     {"keywords" : ["치킨댄스"], "tags": [""], "path": "https://i.postimg.cc/pTCC0Y2x/image.gif"},
     {"keywords" : ["축배1"], "tags": [""], "path": "https://i.postimg.cc/fyjRmnX8/1.gif"},
     {"keywords" : ["박수1"], "tags": [""], "path": "https://i.postimg.cc/K85tFwHr/1.gif"},
@@ -86,7 +90,7 @@
     {"keywords" : ["상원펀치2"], "tags": ["메탈기어솔리드"], "path": "https://i.postimg.cc/XvbZgPKF/2.gif"},
     {"keywords" : ["명치"], "tags": [""], "path": "https://i.postimg.cc/Rq5ZnCN6/image.gif"},
     {"keywords" : ["흙피치애교"], "tags": ["카카오"], "path": "https://i.postimg.cc/pXW24SKt/1.png"},
-    {"keywords" : ["흙피치눈물"], "tags": ["카카오"], "path": "https://i.postimg.cc/vH0Qsvvx/2.png"},
+    {"keywords" : ["흙피치오열"], "tags": ["카카오"], "path": "https://i.postimg.cc/vH0Qsvvx/2.png"},
     {"keywords" : ["흙피치하트"], "tags": ["카카오"], "path": "https://i.postimg.cc/RFxmRpvy/3.png"},
     {"keywords" : ["흙피치ㅋㅋ"], "tags": ["카카오"], "path": "https://i.postimg.cc/5yxVcHYm/4.png"},
     {"keywords" : ["흙피치띠껍"], "tags": ["카카오"], "path": "https://i.postimg.cc/Gpm4NyNh/image.png"},
